@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <HashRouter>
         <Routes>
-          <Route path="/ListView" element={<ListView />} />
+          <Route path="/" element={<ListView />} />
         </Routes>
       </HashRouter>
     </div>

@@ -1,4 +1,4 @@
-import api from "./openfoodfacts";
+import api from "./moviedb";
 
 export interface Product {
   code: string;
@@ -16,7 +16,7 @@ export async function searchFoods(query: string): Promise<Product[]> {
     params: {
       search_terms: query,
       fields: "product_name,nutriments,image_front_url,code",
-      page_size: 20,
+      page_size: 1000,
     },
   });
   return res.data.products;
