@@ -22,21 +22,44 @@ function ListView() {
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={query}
-        onChange={handleChange}
-      />
+      <h1>TVShow Finder</h1>
+
+      <button>Search</button>
+      <button>Gallery</button>
+
+      <div className="searchBox">
+        <input
+          type="text"
+          placeholder="Search tvShows..."
+          value={query}
+          onChange={handleChange}
+        />
+
+        <label>
+          Sort By:
+          <select>
+            <option value="RANK">Rank</option>
+            <option value="TITLE">Title</option>
+          </select>
+        </label>
+
+        <div className="ASCDECS">
+          <button>Ascending</button>
+          <button>Descending</button>
+        </div>
+      </div>
 
       {items.length > 0 && (
         <ul className="autocomplete-list">
           {items.map((item) => (
-            <img
-              src={`https://image.tmdb.org/t/p/w200${item.poster_path}`}
-              alt={item.name}
-              width={40}
-            />
+            <li key={item.id}>
+              <img
+                src={`https://image.tmdb.org/t/p/w200${item.poster_path}`}
+                alt={item.name}
+                width={40}
+              />
+              {item.name}
+            </li>
           ))}
         </ul>
       )}
