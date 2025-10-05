@@ -1,23 +1,38 @@
 import api from "./moviedb";
 
-export interface Product {
-  code: string;
-  product_name: string;
-  image_front_url?: string;
-  nutriments?: {
-    caffeine_100g: number;
-    energy_kcal_100g?: number;
-    [key: string]: number | undefined;
-  };
+export interface TVShow {
+  id: number;
+  name: string;
+  original_name: string;
+  overview: string;
+  first_air_date?: string;
+  last_air_date?: string;
+  poster_path?: string;
+  backdrop_path?: string;
+  vote_average: number;
+  vote_count: number;
+  popularity: number;
+  original_language: string;
+  genre_ids?: number[];
+  number_of_episodes?: number;
+  number_of_seasons?: number;
 }
 
-export async function searchFoods(query: string): Promise<Product[]> {
-  const res = await api.get<{ products: Product[] }>("/search", {
+export interface TVShowResponse {
+  page: number;
+  results: TVShow[];
+  total_pages: number;
+  total_results: number;
+}
+
+export async function searchTVShows(query: string): Promise<TVShow[]> {
+  const res = await api.get<TVShowResponse>("search/tv", {
     params: {
-      search_terms: query,
-      fields: "product_name,nutriments,image_front_url,code",
-      page_size: 1000,
+      query,
+      include_adult: false,
+      language: "en-US",
+      page: 1,
     },
   });
-  return res.data.products;
+  return res.data.results;
 }

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Product, searchFoods } from "../api/products";
+import { TVShow, searchTVShows } from "../api/products";
 
 function ListView() {
   const [query, setQuery] = useState("");
-  const [items, setItems] = useState<Product[]>([]);
+  const [items, setItems] = useState<TVShow[]>([]);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const q = e.target.value;
@@ -12,10 +12,10 @@ function ListView() {
       setItems([]);
       return;
     }
-    const results = await searchFoods(q);
+    const results = await searchTVShows(q);
 
     const searchFilter = results.filter((item) =>
-      item.product_name?.toLowerCase().includes(q.toLowerCase())
+      item.name?.toLowerCase().includes(q.toLowerCase())
     );
     setItems(searchFilter);
   };
@@ -32,15 +32,11 @@ function ListView() {
       {items.length > 0 && (
         <ul className="autocomplete-list">
           {items.map((item) => (
-            <li key={item.code}>
-              <img
-                src={item.image_front_url}
-                alt={item.product_name}
-                width={40}
-              />
-              {item.product_name} ({item.nutriments?.caffeine_100g ?? "N/A"} mg
-              caffeine)
-            </li>
+            <img
+              src={`https://image.tmdb.org/t/p/w200${item.poster_path}`}
+              alt={item.name}
+              width={40}
+            />
           ))}
         </ul>
       )}
