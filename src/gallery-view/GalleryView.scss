@@ -1,0 +1,32 @@
+.checkbox-label input[type="checkbox"] {
+  display: none;
+}
+.checkbox-label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #e0e0e0;
+  color: #000000;
+  border: 2px solid;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.checkbox-label:hover {
+  background-color: #d0d0d0;
+  border-color: #999;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.checkbox-label.checked {
+  background-color: #2196f3;
+  color: white;
+  border-color: #1976d2;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+.checkbox-label.checked:hover {
+  background-color: #1976d2;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}

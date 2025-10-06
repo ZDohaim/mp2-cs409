@@ -99,7 +99,7 @@ function GalleryView() {
             <div key={show.id} className="gallery-item">
               {show.poster_path ? (
                 <img
-                  src={`https://image.tmdb.org/t/p/w300${show.poster_path}`}
+                  src={`https://image.tmdb.org/t/p/w200${show.poster_path}`}
                   alt={show.name}
                 />
               ) : (

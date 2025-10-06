@@ -55,7 +55,7 @@ export async function getTVShowsByGenre(genreId: number): Promise<TVShow[]> {
     params: {
       with_genres: genreId,
       language: "en-US",
-      page: 1,
+      page: 5,
       sort_by: "popularity.desc",
     },
   });
