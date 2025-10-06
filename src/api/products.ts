@@ -36,3 +36,8 @@ export async function searchTVShows(query: string): Promise<TVShow[]> {
   });
   return res.data.results;
 }
+
+export async function getTVShow(id: number): Promise<TVShow> {
+  const res = await api.get<TVShow>(`/tv/${id}`);
+  return res.data;
+}

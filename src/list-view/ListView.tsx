@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { TVShow, searchTVShows } from "../api/products";
-
+import DetailsView from "../details-view/DetailsView";
+import { useNavigate } from "react-router-dom";
 function ListView() {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<TVShow[]>([]);
+  const [sortKey, setSortKey] = useState<
+    "popularity" | "vote_average" | "name"
+  >("popularity");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const navigate = useNavigate();
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const q = e.target.value;
@@ -20,12 +26,23 @@ function ListView() {
     setItems(searchFilter);
   };
 
+  const sortFunctions: Record<string, (a: TVShow, b: TVShow) => number> = {
+    popularity: (a, b) => a.popularity - b.popularity,
+    vote_average: (a, b) => a.vote_average - b.vote_average,
+    name: (a, b) => a.name.localeCompare(b.name),
+  };
+
+  const sortedItems = [...items].sort((a, b) => {
+    const sortFn = sortFunctions[sortKey];
+    return sortOrder === "asc" ? sortFn(a, b) : -sortFn(a, b);
+  });
+  const handleClick = (id: number) => {
+    navigate(`/details/${id}`);
+  };
+
   return (
     <div>
       <h1>TVShow Finder</h1>
-
-      <button>Search</button>
-      <button>Gallery</button>
 
       <div className="searchBox">
         <input
@@ -37,28 +54,37 @@ function ListView() {
 
         <label>
           Sort By:
-          <select>
-            <option value="RANK">Rank</option>
-            <option value="TITLE">Title</option>
+          <select
+            value={sortKey}
+            onChange={(e) =>
+              setSortKey(
+                e.target.value as "popularity" | "vote_average" | "name"
+              )
+            }
+          >
+            <option value="popularity">Popularity</option>
+            <option value="vote_average">Rating</option>
+            <option value="name">Title</option>
           </select>
         </label>
 
         <div className="ASCDECS">
-          <button>Ascending</button>
-          <button>Descending</button>
+          <button onClick={() => setSortOrder("asc")}>Ascending</button>
+          <button onClick={() => setSortOrder("desc")}>Descending</button>
         </div>
       </div>
 
-      {items.length > 0 && (
+      {sortedItems.length > 0 && (
         <ul className="autocomplete-list">
-          {items.map((item) => (
-            <li key={item.id}>
+          {sortedItems.map((item) => (
+            <li key={item.id} onClick={() => handleClick(item.id)}>
               <img
                 src={`https://image.tmdb.org/t/p/w200${item.poster_path}`}
                 alt={item.name}
                 width={40}
               />
-              {item.name}
+              {item.name} — Rating: {item.vote_average} — Popularity:{" "}
+              {item.popularity}
             </li>
           ))}
         </ul>
