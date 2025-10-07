@@ -35,10 +35,11 @@ function DetailsView() {
 
   useEffect(() => {
     if (!id || isNaN(Number(id))) {
-      setError("Invalid TV Show ID");
+      console.error("no Id");
+      setError("no Id");
       return;
     }
-
+    console.error("Failed to fetch genres");
     setError(null);
     getTVShow(Number(id)).then((data) => {
       setShow(data);
@@ -68,6 +69,9 @@ function DetailsView() {
       >
         NEXT
       </button>
+
+      {error && <div className="error">{error}</div>}
+
       <h1>{show.name}</h1>
       {show.poster_path && (
         <img
