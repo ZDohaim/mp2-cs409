@@ -6,7 +6,7 @@ import "./GalleryView.scss";
 function GalleryView() {
   const [shows, setShows] = useState<TVShow[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -24,13 +24,7 @@ function GalleryView() {
   };
 
   const handleGenreToggle = (genreId: number) => {
-    setSelectedGenres((prev) => {
-      if (prev.includes(genreId)) {
-        return prev.filter((id) => id !== genreId);
-      } else {
-        return [...prev, genreId];
-      }
-    });
+    setSelectedGenre((prev) => (prev === genreId ? null : genreId));
   };
 
   useEffect(() => {
@@ -45,14 +39,14 @@ function GalleryView() {
   }, []);
 
   useEffect(() => {
-    if (selectedGenres.length === 0) {
+    if (selectedGenre === null) {
       setShows([]);
       return;
     }
 
     setError(null);
 
-    getTVShowsByGenre(selectedGenres[0])
+    getTVShowsByGenre(selectedGenre)
       .then((showList) => {
         setShows(showList);
       })
@@ -60,7 +54,7 @@ function GalleryView() {
         console.error("Failed to fetch shows", err);
         setError("Failed to load TV shows");
       });
-  }, [selectedGenres]);
+  }, [selectedGenre]);
 
   return (
     <div>
@@ -73,13 +67,13 @@ function GalleryView() {
             <label
               key={genre.id}
               className={`checkbox-label ${
-                selectedGenres.includes(genre.id) ? "checked" : ""
+                selectedGenre === genre.id ? "checked" : ""
               }`}
             >
               <input
                 type="checkbox"
                 id={`genre-${genre.id}`}
-                checked={selectedGenres.includes(genre.id)}
+                checked={selectedGenre === genre.id}
                 onChange={() => handleGenreToggle(genre.id)}
               />
               <span>{genre.name}</span>
@@ -88,19 +82,12 @@ function GalleryView() {
         </div>
       </div>
 
-      {selectedGenres.length > 0 && (
-        <div className="selected-genres">
-          <strong>Filtering by:</strong>{" "}
-          {selectedGenres
-            .map((id) => genres.find((g) => g.id === id)?.name)
-            .join(", ")}
-        </div>
-      )}
+      {selectedGenre !== null && <div className="selected-genres"></div>}
 
       {error && <div className="error">{error}</div>}
 
-      {shows.length === 0 && selectedGenres.length > 0 && (
-        <div className="no-results">No shows found for selected genres</div>
+      {shows.length === 0 && selectedGenre === null && (
+        <div className="no-results">Select Genre</div>
       )}
 
       {shows.length > 0 && (
