@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "./logo.svg";
-import "./App.css";
+import "./App.scss";
 import ListView from "./list-view/ListView";
 import DetailsView from "./details-view/DetailsView";
 import GalleryView from "./gallery-view/GalleryView";
