@@ -2,13 +2,7 @@ import "./App.scss";
 import ListView from "./list-view/ListView";
 import DetailsView from "./details-view/DetailsView";
 import GalleryView from "./gallery-view/GalleryView";
-import {
-  HashRouter,
-  Routes,
-  Route,
-  Link,
-  BrowserRouter,
-} from "react-router-dom";
+import { Routes, Route, Link, BrowserRouter } from "react-router-dom";
 function App() {
   return (
     <div className="App">
