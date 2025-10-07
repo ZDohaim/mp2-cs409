@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TVShow, getTVShowsByGenre, getTVGenres, Genre } from "../api/products";
+import { useNavigate } from "react-router-dom";
 import "./GalleryView.scss";
 function GalleryView() {
   const [shows, setShows] = useState<TVShow[]>([]);
@@ -8,6 +9,11 @@ function GalleryView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const navigate = useNavigate();
+
+  const handleClick = (id: number) => {
+    navigate(`/details/${id}`);
+  };
   const handleGenreToggle = (genreId: number) => {
     setSelectedGenres((prev) => {
       if (prev.includes(genreId)) {
@@ -69,6 +75,7 @@ function GalleryView() {
                 id={`genre-${genre.id}`}
                 checked={selectedGenres.includes(genre.id)}
                 onChange={() => handleGenreToggle(genre.id)}
+                onClick={() => handleClick(genre.id)}
               />
               <span>{genre.name}</span>
             </label>
