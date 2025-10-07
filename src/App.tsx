@@ -6,7 +6,7 @@ import { HashRouter, Routes, Route, Link } from "react-router-dom";
 function App() {
   return (
     <div className="App">
-      <HashRouter basename="https://zdohaim.github.io/mp2-cs409/">
+      <HashRouter basename="/mp2-cs409">
         <div className="navbar">
           <h1>Top TVShows</h1>
           <Link to="/" className="nav-buttons">
