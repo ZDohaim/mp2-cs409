@@ -2,6 +2,8 @@ import { useState } from "react";
 import { TVShow, searchTVShows } from "../api/products";
 import DetailsView from "../details-view/DetailsView";
 import { useNavigate } from "react-router-dom";
+import "./ListView.scss";
+
 function ListView() {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<TVShow[]>([]);
@@ -36,56 +38,79 @@ function ListView() {
     const sortFn = sortFunctions[sortKey];
     return sortOrder === "asc" ? sortFn(a, b) : -sortFn(a, b);
   });
+
   const handleClick = (id: number) => {
-    navigate(`/details/${id}`);
+    const index = sortedItems.findIndex((item) => item.id === id);
+
+    navigate(`/details/${id}`, {
+      state: {
+        shows: sortedItems,
+        currentIndex: index,
+      },
+    });
   };
 
   return (
     <div>
-      <h1>TVShow Finder</h1>
-
       <div className="searchBox">
-        <input
-          type="text"
-          placeholder="Search tvShows..."
-          value={query}
-          onChange={handleChange}
-        />
+        <h1>TVShow Finder</h1>
 
-        <label>
-          Sort By:
-          <select
-            value={sortKey}
-            onChange={(e) =>
-              setSortKey(
-                e.target.value as "popularity" | "vote_average" | "name"
-              )
-            }
-          >
-            <option value="popularity">Popularity</option>
-            <option value="vote_average">Rating</option>
-            <option value="name">Title</option>
-          </select>
-        </label>
+        <div>
+          <input
+            type="text"
+            placeholder="Search tvShows..."
+            value={query}
+            onChange={handleChange}
+          />
 
+          <label>
+            Sort By:
+            <select
+              value={sortKey}
+              onChange={(e) =>
+                setSortKey(
+                  e.target.value as "popularity" | "vote_average" | "name"
+                )
+              }
+            >
+              <option value="popularity">Popularity</option>
+              <option value="vote_average">Rating</option>
+              <option value="name">Title</option>
+            </select>
+          </label>
+        </div>
         <div className="ASCDECS">
-          <button onClick={() => setSortOrder("asc")}>Ascending</button>
-          <button onClick={() => setSortOrder("desc")}>Descending</button>
+          <button
+            className=".ASCDECS-button"
+            onClick={() => setSortOrder("asc")}
+          >
+            Ascending
+          </button>
+          <button
+            className=".ASCDECS-button"
+            onClick={() => setSortOrder("desc")}
+          >
+            Descending
+          </button>
         </div>
       </div>
 
       {sortedItems.length > 0 && (
         <ul className="autocomplete-list">
           {sortedItems.map((item) => (
-            <li key={item.id} onClick={() => handleClick(item.id)}>
-              <img
-                src={`https://image.tmdb.org/t/p/w200${item.poster_path}`}
-                alt={item.name}
-                width={40}
-              />
-              {item.name} — Rating: {item.vote_average} — Popularity:{" "}
-              {item.popularity}
-            </li>
+            <div className="TvShowList">
+              <li key={item.id} onClick={() => handleClick(item.id)}>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                  alt={item.name}
+                  width={40}
+                />
+              </li>
+              <h3 className="TvShowName">{item.name}</h3>
+              <p>
+                Rating: {item.vote_average} — Popularity: {item.popularity}
+              </p>
+            </div>
           ))}
         </ul>
       )}

@@ -2,18 +2,27 @@ import { useEffect, useState } from "react";
 import { TVShow, getTVShowsByGenre, getTVGenres, Genre } from "../api/products";
 import { useNavigate } from "react-router-dom";
 import "./GalleryView.scss";
+
 function GalleryView() {
   const [shows, setShows] = useState<TVShow[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
-  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
   const handleClick = (id: number) => {
-    navigate(`/details/${id}`);
+    const index = shows.findIndex((show) => show.id === id);
+
+    navigate(`/details/${id}`, {
+      state: {
+        shows: shows,
+        currentIndex: index,
+      },
+    });
   };
+
   const handleGenreToggle = (genreId: number) => {
     setSelectedGenres((prev) => {
       if (prev.includes(genreId)) {
@@ -41,18 +50,15 @@ function GalleryView() {
       return;
     }
 
-    setLoading(true);
     setError(null);
 
     getTVShowsByGenre(selectedGenres[0])
       .then((showList) => {
         setShows(showList);
-        setLoading(false);
       })
       .catch((err) => {
         console.error("Failed to fetch shows", err);
         setError("Failed to load TV shows");
-        setLoading(false);
       });
   }, [selectedGenres]);
 
@@ -75,7 +81,6 @@ function GalleryView() {
                 id={`genre-${genre.id}`}
                 checked={selectedGenres.includes(genre.id)}
                 onChange={() => handleGenreToggle(genre.id)}
-                onClick={() => handleClick(genre.id)}
               />
               <span>{genre.name}</span>
             </label>
@@ -92,18 +97,20 @@ function GalleryView() {
         </div>
       )}
 
-      {loading && <div className="loading">Loading shows...</div>}
-
       {error && <div className="error">{error}</div>}
 
-      {!loading && shows.length === 0 && selectedGenres.length > 0 && (
+      {shows.length === 0 && selectedGenres.length > 0 && (
         <div className="no-results">No shows found for selected genres</div>
       )}
 
-      {!loading && shows.length > 0 && (
+      {shows.length > 0 && (
         <div className="gallery-grid">
           {shows.map((show) => (
-            <div key={show.id} className="gallery-item">
+            <div
+              key={show.id}
+              className="gallery-item"
+              onClick={() => handleClick(show.id)}
+            >
               {show.poster_path ? (
                 <img
                   src={`https://image.tmdb.org/t/p/w200${show.poster_path}`}

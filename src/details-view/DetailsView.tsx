@@ -1,6 +1,7 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { TVShow, getTVShow } from "../api/products";
+import "./DetailsView.scss";
 import api from "../api/moviedb";
 
 function DetailsView() {
@@ -9,6 +10,29 @@ function DetailsView() {
   const [show, setShow] = useState<TVShow | null>(null);
 
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
+  const { shows, currentIndex } = location.state || {};
+
+  let prevId: number | null = null;
+  let nextId: number | null = null;
+
+  if (shows && currentIndex !== undefined) {
+    if (currentIndex > 0) {
+      prevId = shows[currentIndex - 1].id;
+    }
+    if (currentIndex < shows.length - 1) {
+      nextId = shows[currentIndex + 1].id;
+    }
+  }
+
+  const handleNav = (newId: number) => {
+    navigate(`/details/${newId}`, {
+      state: {
+        shows: shows,
+        currentIndex: shows.findIndex((s: any) => s.id === newId),
+      },
+    });
+  };
 
   useEffect(() => {
     if (!id || isNaN(Number(id))) {
@@ -31,13 +55,26 @@ function DetailsView() {
 
   return (
     <div className="detailsBox">
-      <button onClick={() => navigate("/")}>← Back to Search</button>
+      <button
+        className="prevbackButton"
+        onClick={() => handleNav(prevId!)}
+        disabled={!prevId}
+      >
+        BACK
+      </button>
+      <button
+        className="prevbackButton"
+        onClick={() => handleNav(nextId!)}
+        disabled={!nextId}
+      >
+        NEXT
+      </button>
       <h1>{show.name}</h1>
-      <p>{show.overview}</p>
       {show.poster_path && (
         <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} />
       )}
       <div>
+        <p className="overview">{show.overview}</p>
         <p>
           <strong>Rating:</strong> {show.vote_average}/10
         </p>
