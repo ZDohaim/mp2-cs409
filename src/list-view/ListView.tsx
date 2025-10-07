@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { TVShow, searchTVShows } from "../api/products";
-import DetailsView from "../details-view/DetailsView";
 import { useNavigate } from "react-router-dom";
 import "./ListView.scss";
 
@@ -41,7 +40,6 @@ function ListView() {
 
   const handleClick = (id: number) => {
     const index = sortedItems.findIndex((item) => item.id === id);
-
     navigate(`/details/${id}`, {
       state: {
         shows: sortedItems,

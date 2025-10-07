@@ -1,8 +1,7 @@
-import { useParams, useNavigate, Routes, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { TVShow, getTVShow } from "../api/products";
 import "./DetailsView.scss";
-import api from "../api/moviedb";
 
 function DetailsView() {
   const { id } = useParams<{ id: string }>();
@@ -71,7 +70,10 @@ function DetailsView() {
       </button>
       <h1>{show.name}</h1>
       {show.poster_path && (
-        <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} />
+        <img
+          src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
+          alt={show.name}
+        />
       )}
       <div>
         <p className="overview">{show.overview}</p>

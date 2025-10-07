@@ -1,5 +1,3 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.scss";
 import ListView from "./list-view/ListView";
 import DetailsView from "./details-view/DetailsView";
